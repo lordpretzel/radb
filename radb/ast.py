@@ -306,8 +306,9 @@ class RelExpr(Node):
         query += '\nSELECT * FROM {}'.format(self.type.sql_rel())
         logger.debug('SQL generated:\n' + query)
         try:
-            print('({})'.format(', '.join(self.type.str_attr_names_and_types())))
-            context.db.execute_and_print_result(query)
+            #print('({})'.format(', '.join(self.type.str_attr_names_and_types())))
+            attrs = self.type.str_attr_names_and_types()
+            context.db.execute_and_print_result(query, attrs)
         except Exception as e:
             raise ExecutionError('SQL error in translated query:\n{}\n{}'.format(query, e)) from e
     @staticmethod
@@ -973,6 +974,6 @@ class CommandSqlexec(Command):
     def execute(self, context):
         logger.debug(self.sql)
         try:
-            context.db.execute_and_print_result(self.sql)
+            context.db.execute_and_print_result(self.sql, None)
         except Exception as e:
             raise ExecutionError('SQL error in:\n{}\n{}'.format(self.sql, e)) from e
