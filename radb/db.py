@@ -50,6 +50,7 @@ class DB:
     def execute(self, query, **kwargs):
         try:
             result = self.conn.execute(text(query), **kwargs)
+            self.conn.commit()
         except sqlalchemy.exc.DatabaseError:
             conn = self.engine.connect()
             result = self.conn.execute(text(query), **kwargs)
@@ -57,6 +58,7 @@ class DB:
 
     def execute_and_print_result(self, query, **kwargs):
         result = self.execute(query, **kwargs)
+        self.conn.commit()
         if result.returns_rows:
             print('-'*70)
             count = 0
