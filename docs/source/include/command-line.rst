@@ -33,7 +33,7 @@ useful ones are listed below.
   If this parameter is provided radb will exit after evaluating this statement.
 
 * Use ``-f`` (``--outputformat``) *format* (one of ``radb``, ``org``,
-  ``markdown``) to select how results are shown.
+  ``markdown``, ``csv``) to select how results are shown.
 
 * The optional *source* argument (without a flag) specifies the data
   source you want to connect to.  It can be the name of a section in
