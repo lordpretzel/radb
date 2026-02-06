@@ -51,6 +51,7 @@ class DB:
     def execute(self, query, **kwargs):
         try:
             result = self.conn.execute(text(query), **kwargs)
+            self.conn.commit()
         except sqlalchemy.exc.DatabaseError:
             conn = self.engine.connect()
             result = self.conn.execute(text(query), **kwargs)
@@ -58,6 +59,7 @@ class DB:
 
     def execute_and_print_result(self, query, attrs, **kwargs):
         result = self.execute(query, **kwargs)
+        self.conn.commit()
         if result.returns_rows:
             print(self.resultprinter.print(result, attrs))
         else:
