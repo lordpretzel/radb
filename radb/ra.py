@@ -18,7 +18,7 @@ from radb.parse import ParsingError,\
 from radb.typesys import ValTypeChecker, TypeSysError
 from radb.views import ViewCollection
 from radb import utils
-from radb.ast import Context, ValidationError, ExecutionError, execute_from_file
+from radb.ast import Context, ValidationError, ExecutionError, execute_from_file, execute_from_str
 from radb.resultprinter import ResultPrinter
 
 import logging
@@ -111,12 +111,7 @@ def main():
     # did the user provide a single query to execute?
     if args.query:
         try:
-            ast = one_statement_from_string(args.query)
-            logger.info('statement parsed:')
-            logger.info(str(ast))
-            ast.validate(context)
-            logger.info('statement validated:')
-            ast.execute(context)
+            execute_from_str(args.query, context, echo=args.echo)
         except (ParsingError, ValidationError, ExecutionError) as e:
             logger.error(f"Query failed: {args.query}")
             logger.error(e)

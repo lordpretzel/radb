@@ -11,16 +11,18 @@ class ResultPrinter():
             return MarkdownResultPrinter()
         if outputformat == 'org':
             return OrgResultPrinter()
+        if outputformat == 'csv':
+            return CSVResultPrinter()
         raise Exception(f"no result printer for {outputformat} exists!")
 
     @classmethod
     def getcolsizes(cls, r, attrs):
         colsizes = [0] * len(r[0])
         for i, v in enumerate(attrs):
-            colsizes[i] = max(colsizes[i], len(v))
+            colsizes[i] = max(colsizes[i], len(str(v)))
         for row in r:
             for i, v in enumerate(row):
-                colsizes[i] = max(colsizes[i], len(v))
+                colsizes[i] = max(colsizes[i], len(str(v)))
         return colsizes
 
     @classmethod
@@ -52,6 +54,23 @@ class RADBResultPrinter(ResultPrinter):
                                                '' if count == 1 else 's'))
         return output.getvalue()
 
+
+class CSVResultPrinter(ResultPrinter):
+
+    def formatonerow(self,row):
+        return ','.join([str(val).strip() for val in row]) + '\n'
+
+    @override
+    def print(self,r, attrs):
+        r = ResultPrinter.result_as_list(r)
+        output = io.StringIO()
+        # write header
+        output.write(self.formatonerow(attrs))
+        count = 0
+        for row in r:
+            output.write(self.formatonerow(row))
+            count += 1
+        return output.getvalue()
 
 
 class MarkdownResultPrinter(ResultPrinter):

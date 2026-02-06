@@ -6,7 +6,7 @@ from radb.utils import CustomJSONSerializable, lreplace
 from radb.typesys import ValType, AttrSpec, RelType, TypeSysError
 from radb.parse import RAParser as sym
 from radb.parse import literal, symbolic, sqlstr_to_str, str_to_sqlstr
-from radb.parse import statements_from_file, one_statement_from_string
+from radb.parse import statements_from_file, one_statement_from_string, statements_from_string
 
 import logging
 logger = logging.getLogger('ra')
@@ -33,7 +33,18 @@ class StatementContext(Context):
 ######################################################################
 
 def execute_from_file(filename, context, echo=False):
-    for ast in statements_from_file(filename):
+    execute_statements(statements_from_file(filename),
+                       context,
+                       echo)
+
+def execute_from_str(s, context, echo=False):
+    execute_statements(statements_from_string(s),
+                       context,
+                       echo)
+
+
+def execute_statements(asts, context, echo=False):
+    for ast in asts:
         if echo:
             print(str(ast) + literal(sym.TERMINATOR))
         ast.validate(context)
@@ -41,6 +52,7 @@ def execute_from_file(filename, context, echo=False):
         for line in ast.info():
             logger.info(line)
         ast.execute(context)
+
 
 class ExecutionError(Exception):
     pass
