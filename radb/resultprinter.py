@@ -40,7 +40,7 @@ class DefaultResultPrinter(ResultPrinter):
     @override
     def print(self,r,attrs):
         output = io.StringIO()
-        output.write('({})'.format(', '.join(attrs)))
+        output.write('({})\n'.format(', '.join(attrs)))
         if r.returns_rows:
             output.write('-'*70 + "\n")
             count = 0
