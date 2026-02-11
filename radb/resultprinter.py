@@ -39,20 +39,18 @@ class DefaultResultPrinter(ResultPrinter):
 
     @override
     def print(self,r,attrs):
-        r = ResultPrinter.result_as_list(r)
-        colsizes = ResultPrinter.getcolsizes(r, attrs)
-        totallen = sum(colsizes) + (len(colsizes) - 1) * 2
         output = io.StringIO()
-        output.write('-'*totallen + '\n')
-        output.write(', '.join(str(val).ljust(colsizes[i]) for i,val in enumerate(attrs)) + '\n')
-        output.write('-'*totallen + '\n')
-        count = 0
-        for row in r:
-            output.write(', '.join(str(val).ljust(colsizes[i]) for i,val in enumerate(row)) + '\n')
-            count += 1
-        output.write('-'*totallen)
-        output.write('\n{} tuple{} returned'.format('no' if count == 0 else count,
-                                               '' if count == 1 else 's'))
+        output.write('({})'.format(', '.join(attrs)))
+        if r.returns_rows:
+            output.write('-'*70 + "\n")
+            count = 0
+            for row in r:
+                output.write(', '.join(str(val) for val in row) + "\n")
+                count += 1
+            output.write('-'*70 + "\n")
+            output.write('{} tuple{} returned\n'.format('no' if count == 0 else count,
+                                                        '' if count == 1 else 's'))
+
         return output.getvalue()
 
 
