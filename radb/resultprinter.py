@@ -1,12 +1,13 @@
 import io
 from typing import override
+import csv
 
 class ResultPrinter():
 
     @classmethod
     def create(cls, outputformat):
-        if outputformat == 'radb':
-            return RADBResultPrinter()
+        if outputformat == 'default':
+            return DefaultResultPrinter()
         if outputformat == 'markdown':
             return MarkdownResultPrinter()
         if outputformat == 'org':
@@ -34,7 +35,7 @@ class ResultPrinter():
 
 
 
-class RADBResultPrinter(ResultPrinter):
+class DefaultResultPrinter(ResultPrinter):
 
     @override
     def print(self,r,attrs):
@@ -64,12 +65,10 @@ class CSVResultPrinter(ResultPrinter):
     def print(self,r, attrs):
         r = ResultPrinter.result_as_list(r)
         output = io.StringIO()
+        csvwriter = csv.writer(output)
         # write header
-        output.write(self.formatonerow(attrs))
-        count = 0
-        for row in r:
-            output.write(self.formatonerow(row))
-            count += 1
+        csvwriter.write(attrs)
+        csvwriter(r)
         return output.getvalue()
 
 

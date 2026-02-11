@@ -32,7 +32,7 @@ useful ones are listed below.
 * Use ``-q`` (``--query``) *query_string* to specify an RA statement to execute.
   If this parameter is provided radb will exit after evaluating this statement.
 
-* Use ``-f`` (``--outputformat``) *format* (one of ``radb``, ``org``,
+* Use ``-f`` (``--outputformat``) *format* (one of ``default``, ``org``,
   ``markdown``, ``csv``) to select how results are shown.
 
 * The optional *source* argument (without a flag) specifies the data
